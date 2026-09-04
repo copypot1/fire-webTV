@@ -1,0 +1,62 @@
+[
+  {
+    "id": "youtube",
+    "name": "YouTube Clean",
+    "url": "https://www.youtube.com",
+    "icon": "https://www.youtube.com/s/desktop/f71fa08d/img/favicon.ico",
+    "category": "Video & Media",
+    "userAgent": "Mozilla/5.0 (SMART-TV; Linux; Tizen 5.0) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/2.2 Chrome/69.0.3497.106.1 TV Safari/537.36",
+    "adBlockEnabled": true,
+    "virtualCursorDefault": false
+  },
+  {
+    "id": "twitch",
+    "name": "Twitch TV",
+    "url": "https://www.twitch.tv",
+    "icon": "https://static.twitchcdn.net/assets/favicon-32-e29e246c157142c94346.png",
+    "category": "Live Streaming",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "adBlockEnabled": true,
+    "virtualCursorDefault": true
+  },
+  {
+    "id": "anime",
+    "name": "HiAnime / Streaming",
+    "url": "https://hianime.to",
+    "icon": "https://hianime.to/favicon.ico",
+    "category": "Anime & Shows",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "adBlockEnabled": true,
+    "virtualCursorDefault": true
+  },
+  {
+    "id": "movies_stream",
+    "name": "Fmovies / Free Media",
+    "url": "https://fmoviesz.to",
+    "icon": "https://fmoviesz.to/favicon.ico",
+    "category": "Movies & Series",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "adBlockEnabled": true,
+    "virtualCursorDefault": true
+  },
+  {
+    "id": "sports",
+    "name": "Sportsurge / Live Sports",
+    "url": "https://sportsurge.net",
+    "icon": "https://sportsurge.net/favicon.ico",
+    "category": "Sports",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "adBlockEnabled": true,
+    "virtualCursorDefault": true
+  },
+  {
+    "id": "search_browser",
+    "name": "DuckDuckGo Clean Search",
+    "url": "https://duckduckgo.com",
+    "icon": "https://duckduckgo.com/favicon.ico",
+    "category": "Utilities",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "adBlockEnabled": true,
+    "virtualCursorDefault": false
+  }
+]

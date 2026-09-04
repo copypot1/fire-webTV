@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="#151d30">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="App Name"
+        android:textColor="#94A3B8"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/edit_app_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="e.g. Free Anime, Sportsurge"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#64748B"
+        android:background="#0c1220"
+        android:padding="12dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Website URL"
+        android:textColor="#94A3B8"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/edit_app_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="https://..."
+        android:textColor="#FFFFFF"
+        android:textColorHint="#64748B"
+        android:background="#0c1220"
+        android:padding="12dp"
+        android:inputType="textUri"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="16dp" />
+
+    <Switch
+        android:id="@+id/switch_adblock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Block Ads &amp; Popups"
+        android:textColor="#FFFFFF"
+        android:checked="true"
+        android:layout_marginBottom="12dp" />
+
+    <Switch
+        android:id="@+id/switch_cursor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Default to Virtual Mouse Cursor"
+        android:textColor="#FFFFFF"
+        android:checked="true" />
+
+</LinearLayout>

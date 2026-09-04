@@ -1,0 +1,86 @@
+/* FireWeb TV Universal Cosmetic Ad-Blocker Stylesheet */
+
+/* Standard Ad Containers & Banners */
+ins.adsbygoogle,
+div[id^="google_ads_"],
+div[id*="ScriptRoot"],
+div[id*="-ad-"],
+div[id$="-ad"],
+div[class*="ad-box"],
+div[class*="ad-container"],
+div[class*="ad-wrapper"],
+div[class*="ad-banner"],
+div[class*="banner-ad"],
+div[class*="advertisement"],
+div[class*="ad_unit"],
+div[class*="sponsor-box"],
+div[id*="advertisement"],
+div[id*="sponsored-content"],
+div[id*="taboola-"],
+div[id*="outbrain-"],
+aside[class*="ad"],
+section[class*="advertisement"],
+[data-ad-unit],
+[data-ad-slot],
+[aria-label*="advertisement" i],
+[aria-label*="sponsored" i],
+iframe[src*="doubleclick.net"],
+iframe[src*="googlesyndication.com"],
+iframe[src*="adnxs.com"],
+iframe[src*="adservice"],
+iframe[src*="taboola"],
+iframe[src*="outbrain"],
+iframe[id*="google_ads_iframe"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    min-height: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+}
+
+/* Floating & Sticky Bottom/Top Banners */
+div[class*="sticky-ad"],
+div[class*="floating-ad"],
+div[id*="sticky-ad"],
+div[id*="floating-ad"],
+div[class*="bottom-ad"],
+div[id*="bottom-ad"] {
+    display: none !important;
+}
+
+/* Common Video Player Ad Overlays on Streaming Sites */
+div[class*="video-ad"],
+div[class*="player-ad"],
+div[id*="video-ad"],
+div[id*="player-ad"],
+div[class*="jw-ad-container"],
+div[class*="vjs-ad-playing"],
+.ytp-ad-overlay-container,
+.ytp-ad-message-container,
+.ytp-ad-progress,
+.ytp-ad-preview-container,
+.video-ads,
+.ad-interrupting {
+    display: none !important;
+}
+
+/* Common Anti-Adblock & Floating Blocker Overlays */
+div[class*="adblock-overlay"],
+div[id*="adblock-overlay"],
+div[class*="adblock-modal"],
+div[id*="adblock-modal"],
+div[class*="adblock-notice"],
+div[id*="adblock-notice"],
+div[class*="fc-ab-root"],
+.sp_message_container {
+    display: none !important;
+}
+
+/* Re-enable scrolling if anti-adblock locked body */
+html, body {
+    overflow: auto !important;
+    position: static !important;
+}

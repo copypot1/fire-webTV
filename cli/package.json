@@ -1,0 +1,16 @@
+{
+  "name": "fireweb-tv-generator",
+  "version": "1.0.0",
+  "description": "Generator tool for creating ad-free Fire TV web apps",
+  "main": "generator.js",
+  "bin": {
+    "fireweb-gen": "./generator.js"
+  },
+  "scripts": {
+    "test": "node test-adblock.js",
+    "generate": "node generator.js"
+  },
+  "keywords": ["firetv", "androidtv", "adblock", "pwa", "tv-apps"],
+  "author": "",
+  "license": "MIT"
+}
