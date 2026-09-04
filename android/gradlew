@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# Attempt to find JAVA_HOME if not set
+if [ -z "$JAVA_HOME" ]; then
+    if [ -d "$HOME/openJdk-25.jdk/Contents/Home" ]; then
+        export JAVA_HOME="$HOME/openJdk-25.jdk/Contents/Home"
+        export PATH="$JAVA_HOME/bin:$PATH"
+    elif [ -x "/usr/libexec/java_home" ]; then
+        export JAVA_HOME=$(/usr/libexec/java_home 2>/dev/null)
+        export PATH="$JAVA_HOME/bin:$PATH"
+    fi
+fi
+
+# Fallback to system gradle if wrapper jar is not downloaded yet
+if command -v gradle >/dev/null 2>&1; then
+    exec gradle "$@"
+fi
+
+# Check wrapper jar
+DIR="$(cd "$(dirname "$0")" && pwd)"
+WRAPPER_JAR="$DIR/gradle/wrapper/gradle-wrapper.jar"
+
+if [ -f "$WRAPPER_JAR" ]; then
+    exec java -jar "$WRAPPER_JAR" "$@"
+else
+    echo "================================================================="
+    echo "Gradle wrapper jar not found or Gradle not installed locally."
+    echo ""
+    echo "To build your Fire TV APK, you have 2 super simple options:"
+    echo "  Option A: Open the project folder in Android Studio and click 'Build APK'."
+    echo "  Option B: Use the 1-click GitHub Actions workflow to build in the cloud."
+    echo "  Option C: Run brew install gradle, or install Gradle & Android SDK."
+    echo "================================================================="
+    exit 1
+fi

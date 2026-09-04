@@ -193,11 +193,60 @@ async function main() {
   }
   fs.writeFileSync(webActivityPath, webActivityContent, 'utf8');
 
-  console.log(`✅ Standalone Android TV App Project generated successfully!`);
-  console.log(`\n📁 Location: ${targetDir}`);
-  console.log(`\nTo build this standalone APK:`);
-  console.log(`   cd ${targetDir}`);
-  console.log(`   ./gradlew assembleRelease (or assembleDebug)\n`);
+  // 6. Attempt automatic compilation to .apk if tools are available
+  console.log(`\n⚙️  Attempting to compile .apk package...`);
+  let apkBuilt = false;
+
+  // Auto-detect Java in home directory or standard locations
+  const homeDir = process.env.HOME || '';
+  const possibleJavaDirs = [
+    path.join(homeDir, 'openJdk-25.jdk/Contents/Home'),
+    '/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home'
+  ];
+  for (const dir of possibleJavaDirs) {
+    if (fs.existsSync(dir) && !process.env.JAVA_HOME) {
+      process.env.JAVA_HOME = dir;
+      process.env.PATH = `${path.join(dir, 'bin')}:${process.env.PATH}`;
+      break;
+    }
+  }
+
+  // Auto-detect Android CLI
+  const possibleAndroidPaths = [
+    path.join(homeDir, '.android-cli/bin'),
+    path.join(homeDir, 'bin')
+  ];
+  for (const p of possibleAndroidPaths) {
+    if (fs.existsSync(p) && !process.env.PATH.includes(p)) {
+      process.env.PATH = `${p}:${process.env.PATH}`;
+    }
+  }
+
+  try {
+    const { execSync } = require('child_process');
+    console.log(`   Running build in ${targetDir}...`);
+    execSync(`cd "${targetDir}" && chmod +x gradlew && ./gradlew assembleDebug`, { stdio: 'inherit' });
+
+    const generatedApk = path.join(targetDir, 'app/build/outputs/apk/debug/app-debug.apk');
+    const finalApk = path.join(path.dirname(targetDir), `${slug}.apk`);
+    if (fs.existsSync(generatedApk)) {
+      fs.copyFileSync(generatedApk, finalApk);
+      console.log(`\n🎉 SUCCESS! Your APK is ready:`);
+      console.log(`   👉 ${finalApk}\n`);
+      apkBuilt = true;
+    }
+  } catch (err) {
+    console.log(`   ℹ️  Build step message: ${err.message || 'Waiting for build tools'}`);
+  }
+
+  if (!apkBuilt) {
+    console.log(`\n⚠️  The project code is ready at '${targetDir}', but the .apk has not finished compiling yet.`);
+    console.log(`\nIf the android tool just finished installing, make sure to reload your terminal session:`);
+    console.log(`   source ~/.zshrc`);
+    console.log(`And make sure you have the platform installed:`);
+    console.log(`   android sdk install platforms/android-34`);
+    console.log(`\nThen re-run the generator!`);
+  }
 }
 
 main().catch(err => {

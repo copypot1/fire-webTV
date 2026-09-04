@@ -44,6 +44,7 @@
             android:name=".WebActivity"
             android:exported="true"
             android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustResize|stateHidden"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|screenLayout|uiMode">
             <!-- Allow opening external web URLs directly if passed -->
             <intent-filter>

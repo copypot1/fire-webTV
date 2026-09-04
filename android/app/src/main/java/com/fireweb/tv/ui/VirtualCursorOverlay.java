@@ -116,7 +116,19 @@ public class VirtualCursorOverlay extends FrameLayout {
         canvas.drawCircle(cursorX, cursorY, (cursorRadius * 0.35f) * scaleFactor, innerDotPaint);
     }
 
+    private boolean isDialogActive = false;
+
+    public void setDialogActive(boolean active) {
+        this.isDialogActive = active;
+    }
+
+    public boolean isDialogActive() {
+        return isDialogActive;
+    }
+
     public boolean handleDpadKey(int keyCode, KeyEvent event) {
+        if (isDialogActive) return false;
+
         if (keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
             if (event.getAction() == KeyEvent.ACTION_UP) {
                 toggleCursor();
@@ -207,6 +219,9 @@ public class VirtualCursorOverlay extends FrameLayout {
             invalidate();
         });
         anim.start();
+
+        // Ensure web view receives focus for clicks and inputs
+        targetWebView.requestFocus();
 
         long downTime = SystemClock.uptimeMillis();
         long eventTime = SystemClock.uptimeMillis();

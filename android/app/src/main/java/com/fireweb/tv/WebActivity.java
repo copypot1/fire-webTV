@@ -117,11 +117,106 @@ public class WebActivity extends Activity {
             s.setUserAgentString(DEFAULT_DESKTOP_UA);
         }
 
+        // Bridge for handling search/text inputs with Fire TV on-screen keyboard
+        webView.addJavascriptInterface(new FireWebKeyboardBridge(), "FireWebBridge");
+
         webView.setWebViewClient(new FireWebViewClient());
         webView.setWebChromeClient(new FireWebChromeClient());
     }
 
+    public class FireWebKeyboardBridge {
+        @android.webkit.JavascriptInterface
+        public void onInputClicked(final String currentValue, final String placeholder) {
+            runOnUiThread(() -> showTvKeyboardDialog(currentValue, placeholder));
+        }
+    }
+
+    private void showTvKeyboardDialog(String currentValue, String placeholder) {
+        if (isFinishing()) return;
+
+        cursorOverlay.setDialogActive(true);
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert);
+        builder.setTitle(placeholder != null && !placeholder.isEmpty() ? placeholder : "Enter Text / Search");
+
+        final android.widget.EditText input = new android.widget.EditText(this);
+        input.setText(currentValue);
+        input.setSingleLine(true);
+        input.setTextColor(android.graphics.Color.WHITE);
+        input.setBackgroundColor(android.graphics.Color.parseColor("#0C1220"));
+        input.setPadding(32, 24, 32, 24);
+        if (currentValue != null) {
+            input.setSelection(currentValue.length());
+        }
+
+        android.widget.FrameLayout container = new android.widget.FrameLayout(this);
+        container.setPadding(40, 20, 40, 20);
+        container.addView(input);
+        builder.setView(container);
+
+        builder.setPositiveButton("Search / Done", (dialog, which) -> {
+            String entered = input.getText().toString();
+            injectTextIntoActiveWebInput(entered);
+            cursorOverlay.setDialogActive(false);
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> {
+            cursorOverlay.setDialogActive(false);
+            dialog.dismiss();
+        });
+
+        builder.setOnDismissListener(dialog -> cursorOverlay.setDialogActive(false));
+
+        android.app.AlertDialog dialog = builder.create();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+        dialog.show();
+        input.requestFocus();
+    }
+
+    private void injectTextIntoActiveWebInput(String text) {
+        String safeText = org.json.JSONObject.quote(text);
+        String script = "(function() {" +
+                "  var el = document.activeElement;" +
+                "  if (!el || (el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA')) {" +
+                "    el = document.querySelector('input[type=\"search\"], input[type=\"text\"], input[name*=\"search\" i], input[name*=\"keyword\" i], input:not([type=\"hidden\"])');" +
+                "  }" +
+                "  if (el) {" +
+                "    el.focus();" +
+                "    el.value = " + safeText + ";" +
+                "    el.dispatchEvent(new Event('input', { bubbles: true }));" +
+                "    el.dispatchEvent(new Event('change', { bubbles: true }));" +
+                "    if (el.form) {" +
+                "      el.form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));" +
+                "      if (typeof el.form.submit === 'function') el.form.submit();" +
+                "    } else {" +
+                "      var enterEvent = new KeyboardEvent('keydown', { bubbles: true, cancelable: true, keyCode: 13, which: 13, key: 'Enter' });" +
+                "      el.dispatchEvent(enterEvent);" +
+                "    }" +
+                "  }" +
+                "})();";
+        webView.evaluateJavascript(script, null);
+    }
+
     private class FireWebViewClient extends WebViewClient {
+        private static final String INPUT_LISTENER_JS =
+                "(function() {" +
+                "  if (window._firewebInputListenerAttached) return;" +
+                "  window._firewebInputListenerAttached = true;" +
+                "  document.addEventListener('click', function(e) {" +
+                "    var t = e.target;" +
+                "    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) {" +
+                "      var type = (t.getAttribute('type') || 'text').toLowerCase();" +
+                "      if (type !== 'button' && type !== 'submit' && type !== 'checkbox' && type !== 'radio' && type !== 'range') {" +
+                "        if (window.FireWebBridge) {" +
+                "          window.FireWebBridge.onInputClicked(t.value || '', t.placeholder || 'Enter search query...');" +
+                "        }" +
+                "      }" +
+                "    }" +
+                "  }, true);" +
+                "})();";
+
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
             if (isAdBlockEnabled && request != null) {
@@ -155,6 +250,7 @@ public class WebActivity extends Activity {
             if (isAdBlockEnabled) {
                 view.evaluateJavascript(adBlockEngine.getCosmeticJs(), null);
             }
+            view.evaluateJavascript(INPUT_LISTENER_JS, null);
         }
 
         @Override
@@ -164,6 +260,7 @@ public class WebActivity extends Activity {
             if (isAdBlockEnabled) {
                 view.evaluateJavascript(adBlockEngine.getCosmeticJs(), null);
             }
+            view.evaluateJavascript(INPUT_LISTENER_JS, null);
         }
     }
 
