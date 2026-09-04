@@ -1,0 +1,50 @@
+name: Build Fire TV APK
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build Cinejoy Standalone APK
+        run: |
+          if [ -d "dist/cinejoy" ]; then
+            cd dist/cinejoy
+            gradle assembleDebug --stacktrace
+            cd ../..
+          fi
+
+      - name: Build FireWeb TV Hub APK
+        run: |
+          if [ -d "android" ]; then
+            cd android
+            gradle assembleDebug --stacktrace
+            cd ..
+          fi
+
+      - name: Upload Finished APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: FireTV-APKs
+          path: "**/build/outputs/apk/debug/*.apk"
