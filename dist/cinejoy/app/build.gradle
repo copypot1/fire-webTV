@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace 'com.fireweb.app.cinejoy'
+    namespace 'com.fireweb.tv'
     compileSdkVersion 34
 
     defaultConfig {
